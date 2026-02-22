@@ -1,5 +1,6 @@
 #include "input.h"
 #include <string.h>
+#include <stdlib.h>
 
 void input_init(void) {
     sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG_WIDE);
@@ -9,11 +10,9 @@ void input_init(void) {
 }
 
 void input_update(InputState *state) {
-    // Salva stato precedente
     state->pad_prev = state->pad;
     int prev_front_touching = state->front_touching;
 
-    // Aggiorna pulsanti
     memset(&state->pad, 0, sizeof(SceCtrlData));
     sceCtrlPeekBufferPositive(0, &state->pad, 1);
 
@@ -21,19 +20,16 @@ void input_update(InputState *state) {
     state->held     = state->pad.buttons;
     state->released = ~state->pad.buttons & state->pad_prev.buttons;
 
-    // Analog sticks (centrato su 0, range -128..127)
     state->lx = (int)state->pad.lx - 128;
     state->ly = (int)state->pad.ly - 128;
     state->rx = (int)state->pad.rx - 128;
     state->ry = (int)state->pad.ry - 128;
 
-    // Dead zone
     if (abs(state->lx) < 20) state->lx = 0;
     if (abs(state->ly) < 20) state->ly = 0;
     if (abs(state->rx) < 20) state->rx = 0;
     if (abs(state->ry) < 20) state->ry = 0;
 
-    // Touch frontale
     SceTouchData touch;
     sceTouchPeek(SCE_TOUCH_PORT_FRONT, &touch, 1);
 
@@ -42,7 +38,6 @@ void input_update(InputState *state) {
 
     if (touch.reportNum > 0) {
         state->front_touching = 1;
-        // Le coordinate touch vanno da 0..1919 (x) e 0..1087 (y) → normalizzare a 960x544
         state->front_x = touch.report[0].x / 2;
         state->front_y = touch.report[0].y / 2;
     } else {
@@ -52,7 +47,6 @@ void input_update(InputState *state) {
     state->front_just_pressed  = (state->front_touching && !prev_front_touching);
     state->front_just_released = (!state->front_touching && prev_front_touching);
 
-    // Touch posteriore
     SceTouchData back_touch;
     sceTouchPeek(SCE_TOUCH_PORT_BACK, &back_touch, 1);
 
