@@ -24,6 +24,7 @@ add_executable(${PROJECT_NAME}
   src/ui.c
   src/input.c
   src/colors.c
+  src/stubs.c
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)
@@ -38,7 +39,6 @@ target_link_libraries(${PROJECT_NAME}
   SceCommonDialog_stub
   ScePgf_stub
   ScePvf_stub
-  SceSharedFb_stub
   SceAppMgr_stub
   freetype
   png
