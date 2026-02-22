@@ -8,7 +8,7 @@ if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   endif()
 endif()
 
-project(DrawApp)
+project(DrawApp C)
 
 include("${VITASDK}/share/vita.cmake" REQUIRED)
 
@@ -38,6 +38,8 @@ target_link_libraries(${PROJECT_NAME}
   SceCommonDialog_stub
   ScePgf_stub
   ScePvf_stub
+  SceSharedFb_stub
+  SceAppMgr_stub
   freetype
   png
   jpeg
