@@ -16,11 +16,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Install system dependencies
         run: |
-          apt-get update && apt-get install -y cmake make
-          # Installa librerie aggiuntive dal VitaSDK
-          vdpm vita2d
+          apk update && apk add --no-cache cmake make git
+
+      - name: Install VitaSDK libraries
+        run: |
+          vdpm libvita2d
+          vdpm libpng
+          vdpm libjpeg-turbo
+          vdpm zlib
+          vdpm freetype
 
       - name: Build
         run: |
