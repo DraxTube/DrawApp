@@ -17,29 +17,15 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install system dependencies
-        run: |
-          apk update && apk add --no-cache cmake make git bash
-
-      - name: List available vdpm packages
-        run: |
-          echo "=== Listing available packages ==="
-          vdpm --list || true
-          echo "=== VITASDK path ==="
-          echo $VITASDK
-          ls $VITASDK/arm-vita-eabi/lib/ | head -50 || true
+        run: apk update && apk add --no-cache cmake make git
 
       - name: Install VitaSDK libraries
         run: |
-          # Prova i nomi più comuni, ignora errori per pacchetti già presenti
-          vdpm libvita2d || vdpm vita2d || echo "vita2d: trying alternative..."
-          vdpm libpng || echo "libpng already installed or not found"
-          vdpm libjpeg-turbo || vdpm jpeg || echo "jpeg already installed"
-          vdpm zlib || echo "zlib already installed"
-          vdpm freetype2 || vdpm freetype || echo "freetype already installed"
-          # Verifica che libvita2d esista
-          echo "=== Checking vita2d ==="
-          find $VITASDK -name "*vita2d*" -type f 2>/dev/null || echo "vita2d not found!"
-          find $VITASDK -name "*freetype*" -type f 2>/dev/null | head -5
+          vdpm libvita2d || true
+          vdpm libpng || true
+          vdpm libjpeg-turbo || true
+          vdpm zlib || true
+          vdpm freetype2 || vdpm freetype || true
 
       - name: Build
         run: |
